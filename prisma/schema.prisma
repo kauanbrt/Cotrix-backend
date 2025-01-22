@@ -9,6 +9,85 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Administrador {
+  id_adm       Int          @id @default(autoincrement())
+  nome_adm     String
+  email_adm    String
+  senha_adm    String
+  tel_adm      String
+  eventos      Evento[]
+  formularios  Formulario[]
+  participantes Participante[]
+}
+
+model Participante {
+  id_participante     Int          @id @default(autoincrement())
+  nome_participante   String
+  email_participante  String
+  RA_participante     String
+  tel_participante    String
+  isAluno             Boolean
+  id_adm              Int?
+  administrador       Administrador? @relation(fields: [id_adm], references: [id_adm])
+  eventos             Evento[]
+  feedbacks           Feedback[]
+  certificados        Certificado[]
+}
+
+model Evento {
+  id_evento            Int          @id @default(autoincrement())
+  nome_evento          String
+  data_inicio          DateTime
+  data_fim             DateTime
+  descricao_evento     String
+  id_adm               Int
+  administrador        Administrador @relation(fields: [id_adm], references: [id_adm])
+  qtd_participantes    Int
+  duracao              Int
+  classificacao_evento Int
+  participantes        Participante[]
+  formularios          Formulario[]
+  feedbacks            Feedback[]
+  certificados         Certificado[]
+}
+
+model Formulario {
+  id_formulario     Int          @id @default(autoincrement())
+  id_evento         Int
+  evento            Evento       @relation(fields: [id_evento], references: [id_evento])
+  id_adm            Int
+  administrador     Administrador @relation(fields: [id_adm], references: [id_adm])
+  id_tipo           Int
+  tipo              Tipo          @relation(fields: [id_tipo], references: [id_tipo])
+  nome_formulario   String
+  status_formulario Boolean
+}
+
+model Tipo {
+  id_tipo    Int         @id @default(autoincrement())
+  nome_tipo  String
+  formularios Formulario[]
+}
+
+model Feedback {
+  id_evento          Int
+  id_participante    Int
+  evento             Evento       @relation(fields: [id_evento], references: [id_evento])
+  participante       Participante @relation(fields: [id_participante], references: [id_participante])
+  descricao_feedback String
+  classificacao_feedback Int
+  @@id([id_evento, id_participante])
+}
+
+model Certificado {
+  id_certificado     Int          @id @default(autoincrement())
+  id_evento          Int
+  id_participante    Int
+  evento             Evento       @relation(fields: [id_evento], references: [id_evento])
+  participante       Participante @relation(fields: [id_participante], references: [id_participante])
+  status_certificado Boolean
 }
