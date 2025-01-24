@@ -1,36 +1,39 @@
-import prisma from "../database/prisma.js";
+import { FeedbackService } from '../services/feedbackService.js';
 
 export default class feedbackController {
-    static getAllFeedbacks = async (req, res) => {
-        try {
-            const feedbacks = await prisma.feedback.findMany({
-                include: {
-                    evento: true,
-                    participante: true,
-                },
-            });
-            return res.status(200).json(feedbacks);
-        } catch (error) {
-            console.error(error);
-            return res.status(500).json({ message: "Erro ao obter feedbacks." });
-        }
-    };
+  static getAllFeedbacks = async (req, res) => {
+    try {
+      const feedbacks = await FeedbackService.getAllFeedbacks();
 
-    static createFeedback = async (req, res) => {
-        const { id_evento, id_participante, descricao_feedback, classificacao_feedback } = req.body;
-        try {
-            const novoFeedback = await prisma.feedback.create({
-                data: {
-                    id_evento,
-                    id_participante,
-                    descricao_feedback,
-                    classificacao_feedback,
-                },
-            });
-            return res.status(201).json(novoFeedback);
-        } catch (error) {
-            console.error(error);
-            return res.status(500).json({ message: "Erro ao criar feedback." });
-        }
-    };
+      if (feedbacks.length === 0) {
+        return res.status(404).json({ message: 'Nenhum feedback registrado.' });
+      } else {
+        return res.status(200).json(feedbacks);
+      }
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'Erro ao obter feedbacks.' });
+    }
+  };
+
+  static createFeedback = async (req, res) => {
+    const {
+      id_evento,
+      id_participante,
+      descricao_feedback,
+      classificacao_feedback,
+    } = req.body;
+    try {
+      const novoFeedback = await FeedbackService.createFeedback({
+        id_evento,
+        id_participante,
+        descricao_feedback,
+        classificacao_feedback,
+      });
+      return res.status(201).json(novoFeedback);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'Erro ao criar feedback.' });
+    }
+  };
 }
