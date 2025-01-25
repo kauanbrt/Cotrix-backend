@@ -16,37 +16,70 @@ class FeedbackService {
     }
   }
 
-  static async createFeedback(feedback) {
+  static async createFeedback(feedbackData) {
     try {
-      const novoFeedback = await prisma.feedback.create({
-        data: {
-          id_evento: feedback.id_evento,
-          id_participante: feedback.id_participante,
-          descricao_feedback: feedback.descricao_feedback,
-          classificacao_feedback: feedback.classificacao_feedback,
-        },
+      const existingFeedback = await prisma.feedback.findUnique({
+        where: {
+          id_evento_id_participante: {
+            id_evento: feedbackData.id_evento,
+            id_participante: feedbackData.id_participante
+          }
+        }
       });
-      return novoFeedback;
+  
+      if (existingFeedback) {
+        return { message: 'Feedback já registrado para esse evento e participante.' };
+      }
+  
+      const feedback = await prisma.feedback.create({
+        data: feedbackData
+      });
+  
+      const feedbacks = await prisma.feedback.findMany({
+        where: {
+          id_evento: feedbackData.id_evento,
+        },
+        select: {
+          classificacao_feedback: true
+        }
+      });
+  
+      const totalClassificacao = feedbacks.reduce((sum, feedback) => sum + feedback.classificacao_feedback, 0);
+      const novaMedia = totalClassificacao / feedbacks.length;
+  
+      const updatedEvento = await prisma.evento.update({
+        where: {
+          id_evento: feedbackData.id_evento,
+        },
+        data: {
+          classificacao_evento: novaMedia
+        }
+      });
+  
+      return { feedback, updatedEvento };
+  
     } catch (error) {
-      console.error("Erro ao criar feedback", error);
+      console.error('Erro ao criar feedback:', error);
       throw new Error('Erro ao criar feedback.');
     }
   }
-
+  
+  
   static async getAllFeedbackByEvento(id) {
     try {
-      const feedback = await prisma.evento.findMany({
+      const feedbacksDoEvento = await prisma.evento.findMany({
         where: {
           id_evento: parseInt(id),
         },
         include: {
-          participantes: true,
+          classificacao_feedback: true,
         },
       });
-      if (feedback.length === 0) {
+      if (feedbacksDoEvento.length === 0 || !feedbacksDoEvento) {
         return { message: 'Nenhum feedback registrado.' };
       }
-      return feedback;
+      console.log(feedbacksDoEvento.feedbacks);
+      return feedbacksDoEvento.feedbacks;
     } catch (error) {
       console.error('Erro ao obter feedback.', error);
       throw new Error('Erro ao obter feedback.');

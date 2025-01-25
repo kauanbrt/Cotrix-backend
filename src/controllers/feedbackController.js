@@ -40,9 +40,7 @@ export default class feedbackController {
         classificacao_feedback,
       });
   
-      const mediaEvento = await EventoService.calcularMediaEvento(id_evento);
-
-      return res.status(201).json({ feedback, mediaEvento });
+      return res.status(201).json({ feedback });
     } catch (error) {
       console.error(error);
       return res.status(500).json({ message: error.message });
