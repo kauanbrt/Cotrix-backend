@@ -1,7 +1,6 @@
 import prisma from '../../src/database/prisma.js';
 
 class EventoService {
-
   static async getAllEventos() {
     try {
       const eventos = await prisma.evento.findMany({
@@ -14,9 +13,9 @@ class EventoService {
         },
       });
       return eventos;
-    } catch (error) { 
+    } catch (error) {
       console.error(error);
-      return { message: "Erro ao obter eventos." };
+      return { message: 'Erro ao obter eventos.' };
     }
   }
 
@@ -35,7 +34,7 @@ class EventoService {
       return evento;
     } catch (error) {
       console.error(error);
-      return { message: "Erro ao obter evento." };
+      return { message: 'Erro ao obter evento.' };
     }
   }
 
@@ -50,12 +49,15 @@ class EventoService {
           qtd_participantes: evento.qtd_participantes,
           duracao: evento.duracao,
           classificacao_evento: 0,
-        }
+          administrador: {
+            connect: { id_adm: evento.id_adm },
+          },
+        },
       });
       return novoEvento;
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: "Erro ao criar evento." });
+      return res.status(500).json({ message: 'Erro ao criar evento.' });
     }
   }
 
@@ -70,15 +72,14 @@ class EventoService {
           descricao_evento: evento.descricao_evento,
           qtd_participantes: evento.qtd_participantes,
           duracao: evento.duracao,
-          classificacao_evento: evento.classificacao_evento,
-        }
+        },
       });
       return eventoAtuallizado;
-    } catch {
+    } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: "Erro ao atualizar evento." });
+      return res.status(500).json({ message: 'Erro ao atualizar evento.' });
     }
-  }
+  };
 
   static deleteEvento(id) {
     try {
@@ -88,7 +89,36 @@ class EventoService {
       return eventoDeletado;
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: "Erro ao deletar evento." });
+      return res.status(500).json({ message: 'Erro ao deletar evento.' });
+    }
+  }
+
+  static async calcularMediaEvento(id_evento) {
+    try {
+      const feedbacks = await prisma.feedback.findMany({
+        where: { id_evento: parseInt(id_evento) },
+        select: { classificacao_feedback: true },
+      });
+
+      if (feedbacks.length === 0) {
+        return res.status(404).json({ message: 'Nenhuma feedback encontrado.' });
+      }
+
+      const somaNotas = feedbacks.reduce(
+        (total, feedback) => total + feedback.nota,
+        0
+      );
+      const media = somaNotas / feedbacks.length;
+
+      const eventoAtualizado = await prisma.evento.update({
+        where: { id_evento: parseInt(id_evento) },
+        data: { classificacao_evento: media },
+      });
+
+      return eventoAtualizado;
+    } catch (error) {
+      console.error('Erro ao calcular média do evento:', error);
+      return res.status(500).json({ message: 'Erro ao classificar o evento.' });
     }
   }
 }

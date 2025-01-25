@@ -15,27 +15,26 @@ export default class administradorController {
       }
     } catch (error) {
       console.error(error);
-      return res
-        .status(500)
-        .json({ message: 'Erro ao obter administradores.' });
+      return res.status(500).json({ message: error.message });
     }
   };
 
   static getAdministradorById = async (req, res) => {
     const { id } = req.params;
     try {
-      const administrador =
-        await AdministradorService.getAllAdministradoresById(id);
+      const administrador = await AdministradorService.getAdministradoresById(
+        id
+      );
       if (!administrador) {
         return res
           .status(404)
-          .json({ message: 'Administrador não encontrados.' });
+          .json({ message: 'Administrador não encontrado.' });
       } else {
         return res.status(200).json(administrador);
       }
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: 'Erro ao obter administrador.' });
+      return res.status(500).json({ message: error.message });
     }
   };
 
@@ -51,7 +50,7 @@ export default class administradorController {
       return res.status(201).json(novoAdministrador);
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: 'Erro ao criar administrador.' });
+      return res.status(500).json({ message: error.message });
     }
   };
 
@@ -70,24 +69,26 @@ export default class administradorController {
       return res.status(200).json(administradorAtualizado);
     } catch (error) {
       console.error(error);
-      return res
-        .status(500)
-        .json({ message: 'Erro ao atualizar administrador.' });
+      return res.status(500).json({ message: message.error });
     }
   };
 
   static deleteAdministrador = async (req, res) => {
     const { id } = req.params;
     try {
+      const adm = await AdministradorService.getAdministradoresById(id);
+      if (!adm) {
+        return res
+          .status(404)
+          .json({ message: 'Administrador não encontrado.' });
+      }
       await AdministradorService.deleteAdministrador(id);
       return res
         .status(200)
         .json({ message: 'Administrador deletado com sucesso.' });
     } catch (error) {
       console.error(error);
-      return res
-        .status(500)
-        .json({ message: 'Erro ao deletar administrador.' });
+      return res.status(500).json({ message: error.message });
     }
   };
 }

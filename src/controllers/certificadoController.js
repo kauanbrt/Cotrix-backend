@@ -15,11 +15,9 @@ export default class certificadoController {
     const { id_evento, id_participante, status_certificado } = req.body;
     try {
       const novoCertificado = await CertificadoService.createCertificado({
-        data: {
-          id_evento,
-          id_participante,
-          status_certificado,
-        },
+        id_evento,
+        id_participante,
+        status_certificado,
       });
       return res.status(201).json(novoCertificado);
     } catch (error) {

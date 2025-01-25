@@ -28,8 +28,28 @@ class FeedbackService {
       });
       return novoFeedback;
     } catch (error) {
+      console.error("Erro ao criar feedback", error);
+      throw new Error('Erro ao criar feedback.');
+    }
+  }
+
+  static async getAllFeedbackByEvento(id) {
+    try {
+      const feedback = await prisma.evento.findMany({
+        where: {
+          id_evento: parseInt(id),
+        },
+        include: {
+          participantes: true,
+        },
+      });
+      if (!feedback) {
+        return { message: 'Feedback não encontrado.' };
+      }
+      return feedback;
+    } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: 'Erro ao criar feedback.' });
+      return res.status(500).json({ message: 'Erro ao obter feedback.' });
     }
   }
 }

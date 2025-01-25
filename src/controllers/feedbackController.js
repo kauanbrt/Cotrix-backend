@@ -1,4 +1,5 @@
 import { FeedbackService } from '../services/feedbackService.js';
+import { EventoService } from '../services/eventoService.js';
 
 export default class feedbackController {
   static getAllFeedbacks = async (req, res) => {
@@ -16,6 +17,17 @@ export default class feedbackController {
     }
   };
 
+  static getAllFeedbackByEvento = async (req, res) => {
+    const { id } = req.params;
+    try {
+      const feedback = await FeedbackService.getAllFeedbackByEvento(id);
+      return res.status(200).json(feedback);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'Erro ao obter feedback.' });
+    }
+  }
+
   static createFeedback = async (req, res) => {
     const {
       id_evento,
@@ -30,10 +42,11 @@ export default class feedbackController {
         descricao_feedback,
         classificacao_feedback,
       });
+      await EventoService.calcularMediaEvento(id_evento);
       return res.status(201).json(novoFeedback);
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: 'Erro ao criar feedback.' });
+      return res.status(500).json({ message: error.message });
     }
   };
 }

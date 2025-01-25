@@ -39,6 +39,7 @@ router.delete("/tipos/:id", tipoController.deleteTipo);
 
 // Rotas para Feedback
 router.get("/feedbacks", feedbackController.getAllFeedbacks);
+router.get("/feedbacks/:id", feedbackController.getAllFeedbackByEvento);
 router.post("/feedbacks", feedbackController.createFeedback);
 
 // Rotas para Certificado

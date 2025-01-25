@@ -1,4 +1,3 @@
-import e from 'cors';
 import { EventoService } from '../services/eventoService.js';
 
 export default class eventoController {
@@ -41,7 +40,7 @@ export default class eventoController {
       classificacao_evento,
     } = req.body;
     try {
-      const novoEvento = await EventoService.createEvento(
+      const novoEvento = await EventoService.createEvento({
         nome_evento,
         data_inicio,
         data_fim,
@@ -49,8 +48,8 @@ export default class eventoController {
         id_adm,
         qtd_participantes,
         duracao,
-        classificacao_evento
-      );
+        classificacao_evento,
+      });
       return res.status(201).json(novoEvento);
     } catch (error) {
       console.error(error);
@@ -67,19 +66,22 @@ export default class eventoController {
       descricao_evento,
       qtd_participantes,
       duracao,
-      classificacao_evento,
     } = req.body;
+
     try {
-      const eventoAtualizado = await EventoService.updateEvento({
-        where: { id_evento: parseInt(id) },
+      const eventoAtualizado = await EventoService.updateEvento(id, {
         nome_evento,
         data_inicio: new Date(data_inicio),
         data_fim: new Date(data_fim),
         descricao_evento,
         qtd_participantes,
         duracao,
-        classificacao_evento,
       });
+
+      if (!eventoAtualizado) {
+        return res.status(404).json({ message: 'Evento não encontrado.' });
+      }
+      
       return res.status(200).json(eventoAtualizado);
     } catch (error) {
       console.error(error);

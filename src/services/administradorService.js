@@ -12,12 +12,12 @@ class AdministradorService {
       });
       return administradores;
     } catch (error) {
-      console.error(error);
-      return { message: 'Erro ao obter administradores.' };
+      console.error('Erro ao obter administradores:', error);
+      throw new Error('Erro ao obter administradores.');
     }
   }
 
-  static async getAllAdministradoresById(id) {
+  static async getAdministradoresById(id) {
     try {
       const administrador = await prisma.administrador.findUnique({
         where: { id_adm: parseInt(id) },
@@ -27,13 +27,10 @@ class AdministradorService {
           participantes: true,
         },
       });
-      if (!administrador) {
-        return { message: 'Administrador não encontrado.' };
-      }
       return administrador;
     } catch (error) {
-      console.error(error);
-      return { message: 'Erro ao obter administrador.' };
+      console.error('Erro ao obter administrador:', error);
+      throw new Error('Erro ao obter administrador.');
     }
   }
 
@@ -49,8 +46,8 @@ class AdministradorService {
       });
       return novoAdministrador;
     } catch (error) {
-      console.error(error);
-      return { message: 'Erro ao criar administrador.' };
+      console.error('Erro ao criar administrador:', error);
+      throw new Error('Erro ao criar administrador.');
     }
   }
 
@@ -58,15 +55,17 @@ class AdministradorService {
     try {
       const administradorAtualizado = await prisma.administrador.update({
         where: { id_adm: parseInt(id) },
-        nome_adm: administrador.nome_adm,
-        email_adm: administrador.email_adm,
-        senha_adm: administrador.senha_adm,
-        tel_adm: administrador.tel_adm,
+        data: {
+          nome_adm: administrador.nome_adm,
+          email_adm: administrador.email_adm,
+          senha_adm: administrador.senha_adm,
+          tel_adm: administrador.tel_adm,
+        },
       });
       return administradorAtualizado;
     } catch (error) {
-      console.error(error);
-      return { message: 'Erro ao atualizar administrador.' };
+      console.error('Erro ao atualizar administrador:', error);
+      throw new Error('Erro ao atualizar administrador.');
     }
   }
 
@@ -77,8 +76,8 @@ class AdministradorService {
       });
       return administradorDeletado;
     } catch (error) {
-      console.error(error);
-      return { message: 'Erro ao deletar administrador.' };
+      console.error('Erro ao deletar administrador:', error);
+      throw new Error('Erro ao deletar administrador.');
     }
   }
 }
