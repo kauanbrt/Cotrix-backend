@@ -14,8 +14,8 @@ class EventoService {
       });
       return eventos;
     } catch (error) {
-      console.error(error);
-      return { message: 'Erro ao obter eventos.' };
+      console.error('Erro ao obter eventos:', error);
+      throw new Error('Erro ao obter eventos.');
     }
   }
 
@@ -33,8 +33,8 @@ class EventoService {
       });
       return evento;
     } catch (error) {
-      console.error(error);
-      return { message: 'Erro ao obter evento.' };
+      console.error('Erro ao obter evento:', error);
+      throw new Error('Erro ao obter evento.');
     }
   }
 
@@ -56,8 +56,8 @@ class EventoService {
       });
       return novoEvento;
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: 'Erro ao criar evento.' });
+      console.error('Erro ao criar evento:', error);
+      throw new Error('Erro ao criar evento.');
     }
   }
 
@@ -76,8 +76,8 @@ class EventoService {
       });
       return eventoAtuallizado;
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: 'Erro ao atualizar evento.' });
+      console.error('Erro ao atualizar evento:', error);
+      throw new Error('Erro ao atualizar evento.');
     }
   };
 
@@ -88,8 +88,8 @@ class EventoService {
       });
       return eventoDeletado;
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: 'Erro ao deletar evento.' });
+      console.error('Erro ao deletar evento:', error);
+      throw new Error('Erro ao deletar evento.');
     }
   }
 

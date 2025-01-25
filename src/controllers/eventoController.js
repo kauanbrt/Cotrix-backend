@@ -1,6 +1,6 @@
 import { EventoService } from '../services/eventoService.js';
 
-export default class eventoController {
+export default class EventoController {
   static getAllEventos = async (req, res) => {
     try {
       const eventos = await EventoService.getAllEventos();
@@ -10,7 +10,7 @@ export default class eventoController {
       return res.status(200).json(eventos);
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: 'Erro ao obter eventos.' });
+      return res.status(500).json({ message: message.error });
     }
   };
 
@@ -24,7 +24,7 @@ export default class eventoController {
       return res.status(200).json(evento);
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: 'Erro ao obter evento.' });
+      return res.status(500).json({ message: message.error });
     }
   };
 
@@ -53,7 +53,7 @@ export default class eventoController {
       return res.status(201).json(novoEvento);
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: 'Erro ao criar evento.' });
+      return res.status(500).json({ message: message.error });
     }
   };
 
@@ -85,20 +85,18 @@ export default class eventoController {
       return res.status(200).json(eventoAtualizado);
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: 'Erro ao atualizar evento.' });
+      return res.status(500).json({ message: message.error });
     }
   };
 
   static deleteEvento = async (req, res) => {
     const { id } = req.params;
     try {
-      await EventoService.deleteEvento({
-        where: { id_evento: parseInt(id) },
-      });
+      await EventoService.deleteEvento(id);
       return res.status(200).json({ message: 'Evento deletado com sucesso.' });
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: 'Erro ao deletar evento.' });
+      return res.status(500).json({ message: message.error });
     }
   };
 }
