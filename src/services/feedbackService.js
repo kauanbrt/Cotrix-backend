@@ -11,8 +11,8 @@ class FeedbackService {
       });
       return feedbacks;
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: 'Erro ao obter feedbacks.' });
+      console.error('Erro ao obter feedbacks:', error);
+      throw new Error('Erro ao obter feedbacks.');
     }
   }
 
@@ -43,13 +43,13 @@ class FeedbackService {
           participantes: true,
         },
       });
-      if (!feedback) {
-        return { message: 'Feedback não encontrado.' };
+      if (feedback.length === 0) {
+        return { message: 'Nenhum feedback registrado.' };
       }
       return feedback;
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: 'Erro ao obter feedback.' });
+      console.error('Erro ao obter feedback.', error);
+      throw new Error('Erro ao obter feedback.');
     }
   }
 }

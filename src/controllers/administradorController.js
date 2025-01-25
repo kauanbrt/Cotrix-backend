@@ -69,7 +69,7 @@ export default class administradorController {
       return res.status(200).json(administradorAtualizado);
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: message.error });
+      return res.status(500).json({ message: error.message });
     }
   };
 

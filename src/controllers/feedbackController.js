@@ -2,6 +2,7 @@ import { FeedbackService } from '../services/feedbackService.js';
 import { EventoService } from '../services/eventoService.js';
 
 export default class feedbackController {
+
   static getAllFeedbacks = async (req, res) => {
     try {
       const feedbacks = await FeedbackService.getAllFeedbacks();
@@ -13,7 +14,7 @@ export default class feedbackController {
       }
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: 'Erro ao obter feedbacks.' });
+      return res.status(500).json({ message: error.message });
     }
   };
 
@@ -24,26 +25,24 @@ export default class feedbackController {
       return res.status(200).json(feedback);
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: 'Erro ao obter feedback.' });
+      return res.status(500).json({ message: error.message });
     }
   }
 
   static createFeedback = async (req, res) => {
-    const {
-      id_evento,
-      id_participante,
-      descricao_feedback,
-      classificacao_feedback,
-    } = req.body;
+    const { id_evento, id_participante, descricao_feedback, classificacao_feedback } = req.body;
+
     try {
-      const novoFeedback = await FeedbackService.createFeedback({
+      const feedback = await FeedbackService.createFeedback({
         id_evento,
         id_participante,
         descricao_feedback,
         classificacao_feedback,
       });
-      await EventoService.calcularMediaEvento(id_evento);
-      return res.status(201).json(novoFeedback);
+  
+      const mediaEvento = await EventoService.calcularMediaEvento(id_evento);
+
+      return res.status(201).json({ feedback, mediaEvento });
     } catch (error) {
       console.error(error);
       return res.status(500).json({ message: error.message });

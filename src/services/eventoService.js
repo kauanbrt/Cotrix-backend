@@ -93,32 +93,28 @@ class EventoService {
     }
   }
 
-  static async calcularMediaEvento(id_evento) {
+  static async calcularMediaEvento(id) {
     try {
       const feedbacks = await prisma.feedback.findMany({
-        where: { id_evento: parseInt(id_evento) },
-        select: { classificacao_feedback: true },
+        where: { id_evento: parseInt(id) },
       });
 
       if (feedbacks.length === 0) {
         return res.status(404).json({ message: 'Nenhuma feedback encontrado.' });
       }
 
-      const somaNotas = feedbacks.reduce(
-        (total, feedback) => total + feedback.nota,
-        0
-      );
+      const somaNotas = feedbacks.reduce((soma, feedback) => soma + feedback.classificacao_feedback, 0);
       const media = somaNotas / feedbacks.length;
 
-      const eventoAtualizado = await prisma.evento.update({
-        where: { id_evento: parseInt(id_evento) },
-        data: { classificacao_evento: media },
+      await prisma.evento.update({
+        where: { id_evento },
+        data: { classificacao_evento: Math.round(media) },
       });
 
-      return eventoAtualizado;
+      return media;
     } catch (error) {
       console.error('Erro ao calcular média do evento:', error);
-      return res.status(500).json({ message: 'Erro ao classificar o evento.' });
+      throw new Error('Erro ao calcular média do evento.');
     }
   }
 }

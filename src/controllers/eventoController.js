@@ -10,7 +10,7 @@ export default class EventoController {
       return res.status(200).json(eventos);
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: message.error });
+      return res.status(500).json({ message: error.message });
     }
   };
 
@@ -24,7 +24,7 @@ export default class EventoController {
       return res.status(200).json(evento);
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: message.error });
+      return res.status(500).json({ message: error.message });
     }
   };
 
@@ -53,7 +53,7 @@ export default class EventoController {
       return res.status(201).json(novoEvento);
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: message.error });
+      return res.status(500).json({ message: error.message });
     }
   };
 
@@ -85,7 +85,7 @@ export default class EventoController {
       return res.status(200).json(eventoAtualizado);
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: message.error });
+      return res.status(500).json({ message: error.message });
     }
   };
 
@@ -96,7 +96,7 @@ export default class EventoController {
       return res.status(200).json({ message: 'Evento deletado com sucesso.' });
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: message.error });
+      return res.status(500).json({ message: error.message });
     }
   };
 }

@@ -7,7 +7,7 @@ export default class certificadoController {
       return res.status(200).json(certificados);
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: 'Erro ao obter certificados.' });
+      return res.status(500).json({ message: error.message });
     }
   };
 
@@ -22,7 +22,7 @@ export default class certificadoController {
       return res.status(201).json(novoCertificado);
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: 'Erro ao criar certificado.' });
+      return res.status(500).json({ message: error.message });
     }
   };
 }
