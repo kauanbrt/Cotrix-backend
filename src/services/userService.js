@@ -1,10 +1,16 @@
-import userModel from '../models/userModel.js';
+import prisma from "../database/prisma.js";
 
-export default class userService extends userModel{
-
-    static getAllUserService = async (req, res) => {
-        const users = await userService.getAllUserModel();
-        return res.status(200).json(users);
-    };
+class UserService {
+    static async getAllUsers() {
+        try {
+            const users = await prisma.usuario.findMany(); 
+            return users;
+        } catch (error) {
+            console.error("Erro no serviço ao obter usuários:", error);
+            throw new Error("Erro ao buscar usuários."); 
+        }
+    }
 
 }
+
+export default UserService;

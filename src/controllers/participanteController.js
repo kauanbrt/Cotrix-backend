@@ -1,32 +1,20 @@
-import prisma from "../database/prisma.js";
+import ParticipanteService from "../services/participanteService.js";
 
-export default class participanteController {
-
-    static getAllParticipantes = async (req, res) => {
+export default class ParticipanteController {
+    static async getAllParticipantes(req, res) {
         try {
-            const participantes = await prisma.participante.findMany({
-                include: {
-                    administrador: true,
-                    eventos: true,
-                },
-            });
+            const participantes = await ParticipanteService.getAllParticipantes();
             return res.status(200).json(participantes);
         } catch (error) {
             console.error(error);
             return res.status(500).json({ message: "Erro ao obter participantes." });
         }
-    };
+    }
 
-    static getParticipanteById = async (req, res) => {
+    static async getParticipanteById(req, res) {
         const { id } = req.params;
         try {
-            const participante = await prisma.participante.findUnique({
-                where: { id_participante: parseInt(id) },
-                include: {
-                    administrador: true,
-                    eventos: true,
-                },
-            });
+            const participante = await ParticipanteService.getParticipanteById(id);
             if (!participante) {
                 return res.status(404).json({ message: "Participante não encontrado." });
             }
@@ -35,61 +23,53 @@ export default class participanteController {
             console.error(error);
             return res.status(500).json({ message: "Erro ao obter participante." });
         }
-    };
+    }
 
-    static createParticipante = async (req, res) => {
+    static async createParticipante(req, res) {
         const { nome_participante, email_participante, RA_participante, tel_participante, isAluno, id_adm } = req.body;
         try {
-            const novoParticipante = await prisma.participante.create({
-                data: {
-                    nome_participante,
-                    email_participante,
-                    RA_participante,
-                    tel_participante,
-                    isAluno,
-                    administrador: id_adm ? { connect: { id_adm } } : undefined,
-                },
+            const novoParticipante = await ParticipanteService.createParticipante({
+                nome_participante,
+                email_participante,
+                RA_participante,
+                tel_participante,
+                isAluno,
+                administrador: id_adm ? { connect: { id_adm } } : undefined,
             });
             return res.status(201).json(novoParticipante);
         } catch (error) {
             console.error(error);
             return res.status(500).json({ message: "Erro ao criar participante." });
         }
-    };
+    }
 
-    static updateParticipante = async (req, res) => {
+    static async updateParticipante(req, res) {
         const { id } = req.params;
         const { nome_participante, email_participante, RA_participante, tel_participante, isAluno, id_adm } = req.body;
         try {
-            const participanteAtualizado = await prisma.participante.update({
-                where: { id_participante: parseInt(id) },
-                data: {
-                    nome_participante,
-                    email_participante,
-                    RA_participante,
-                    tel_participante,
-                    isAluno,
-                    administrador: id_adm ? { connect: { id_adm } } : undefined,
-                },
+            const participanteAtualizado = await ParticipanteService.updateParticipante(id, {
+                nome_participante,
+                email_participante,
+                RA_participante,
+                tel_participante,
+                isAluno,
+                administrador: id_adm ? { connect: { id_adm } } : undefined,
             });
             return res.status(200).json(participanteAtualizado);
         } catch (error) {
             console.error(error);
             return res.status(500).json({ message: "Erro ao atualizar participante." });
         }
-    };
+    }
 
-    // Deletar participante por ID
-    static deleteParticipante = async (req, res) => {
+    static async deleteParticipante(req, res) {
         const { id } = req.params;
         try {
-            await prisma.participante.delete({
-                where: { id_participante: parseInt(id) },
-            });
+            await ParticipanteService.deleteParticipante(id);
             return res.status(200).json({ message: "Participante deletado com sucesso." });
         } catch (error) {
             console.error(error);
             return res.status(500).json({ message: "Erro ao deletar participante." });
         }
-    };
+    }
 }
