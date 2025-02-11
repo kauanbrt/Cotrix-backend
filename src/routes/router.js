@@ -5,6 +5,7 @@ import formularioController from "../controllers/formularioController.js";
 import tipoController from "../controllers/tipoController.js";
 import feedbackController from "../controllers/feedbackController.js";
 import certificadoController from "../controllers/certificadoController.js";
+import participanteController from "../controllers/participanteController.js";
 
 
 const router = express.Router();
@@ -36,6 +37,13 @@ router.get("/tipos/:id", tipoController.getTipoById);
 router.post("/tipos", tipoController.createTipo);
 router.put("/tipos/:id", tipoController.updateTipo);
 router.delete("/tipos/:id", tipoController.deleteTipo);
+
+// Rotas para Participante
+router.get("/participantes", participanteController.getAllParticipantes);
+router.get("/participantes/:id", participanteController.getParticipanteById);
+router.post("/participantes", participanteController.createParticipante);
+router.put("/participantes/:id", participanteController.updateParticipante);
+router.delete("/participantes/:id", participanteController.deleteParticipante);
 
 // Rotas para Feedback
 router.get("/feedbacks", feedbackController.getAllFeedbacks);

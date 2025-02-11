@@ -35,10 +35,12 @@ export default class EventoController {
       data_fim,
       descricao_evento,
       id_adm,
-      qtd_participantes,
       duracao,
-      classificacao_evento,
     } = req.body;
+
+    const qtd_participantes = 0;
+    const classificacao_evento = 0;
+
     try {
       const novoEvento = await EventoService.createEvento({
         nome_evento,
