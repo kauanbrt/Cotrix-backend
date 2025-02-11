@@ -1,4 +1,4 @@
-import { CertificadoService } from '../services/certificadoService.js';
+import { CertificadoService } from "../services/certificadoService.js";
 
 export default class certificadoController {
   static getAllCertificados = async (req, res) => {
@@ -20,6 +20,27 @@ export default class certificadoController {
         status_certificado,
       });
       return res.status(201).json(novoCertificado);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: error.message });
+    }
+  };
+
+  static exportarCertificadosXML = async (req, res) => {
+    try {
+      const { id_evento } = req.params;
+      const xmlContent = await CertificadoService.exportarCertificadosXML(id_evento);
+
+      if (!xmlContent) {
+        return res.status(404).json({ message: "Nenhum certificado encontrado para este evento." });
+      }
+
+      // Configura o cabeçalho para download do arquivo
+      res.setHeader("Content-Type", "application/xml");
+      res.setHeader("Content-Disposition", `attachment; filename=certificados_evento_${id_evento}.xml`);
+
+      // Envia o conteúdo XML como resposta
+      res.status(200).send(xmlContent);
     } catch (error) {
       console.error(error);
       return res.status(500).json({ message: error.message });
