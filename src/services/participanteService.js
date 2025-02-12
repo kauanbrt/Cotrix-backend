@@ -6,6 +6,15 @@ export default class ParticipanteService {
             include: {
                 administrador: true,
                 eventos: true,
+                certificados: {
+                    take: 1,
+                    orderBy: {
+                        id_certificado: 'desc'
+                    },
+                    where: {
+                        status_certificado: true
+                    }
+                }
             },
         });
     }
