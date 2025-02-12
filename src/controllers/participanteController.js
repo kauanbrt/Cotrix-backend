@@ -72,4 +72,26 @@ export default class ParticipanteController {
             return res.status(500).json({ message: "Erro ao deletar participante." });
         }
     }
+
+    static async addParticipanteToEvento(req, res) {
+        const { eventoId } = req.params;
+        const participanteData = req.body;
+
+        try {
+            const resultado = await ParticipanteService.addParticipanteToEvento(participanteData, eventoId);
+            
+            if (!resultado.success) {
+                return res.status(400).json({ message: resultado.message });
+            }
+
+            return res.status(200).json({
+                message: resultado.message,
+                data: resultado.data
+            });
+        } catch (error) {
+            return res.status(500).json({ 
+                message: "Erro interno do servidor ao processar a requisição." 
+            });
+        }
+    }
 }

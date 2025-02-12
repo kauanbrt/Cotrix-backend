@@ -44,6 +44,7 @@ router.get("/participantes/:id", participanteController.getParticipanteById);
 router.post("/participantes", participanteController.createParticipante);
 router.put("/participantes/:id", participanteController.updateParticipante);
 router.delete("/participantes/:id", participanteController.deleteParticipante);
+router.post('/eventos/:eventoId/participantes', participanteController.addParticipanteToEvento);
 
 // Rotas para Feedback
 router.get("/feedbacks", feedbackController.getAllFeedbacks);
