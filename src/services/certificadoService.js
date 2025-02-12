@@ -53,7 +53,6 @@ class CertificadoService {
       const certificados = await prisma.certificado.findMany({
         where: {
           id_evento: parseInt(id_evento),
-          status_certificado: true,
         },
         include: {
           participante: true,

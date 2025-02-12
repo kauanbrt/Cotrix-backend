@@ -30,17 +30,17 @@ export default class feedbackController {
   }
 
   static createFeedback = async (req, res) => {
-    const { id_evento, id_participante, descricao_feedback, classificacao_feedback } = req.body;
+    const { id_evento, email_participante, descricao_feedback, classificacao_feedback } = req.body;
 
     try {
       const feedback = await FeedbackService.createFeedback({
         id_evento,
-        id_participante,
+        email_participante,
         descricao_feedback,
         classificacao_feedback,
       });
   
-      return res.status(201).json({ feedback });
+      return res.status(feedback.status).json({ feedback });
     } catch (error) {
       console.error(error);
       return res.status(500).json({ message: error.message });

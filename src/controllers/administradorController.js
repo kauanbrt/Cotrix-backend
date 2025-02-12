@@ -39,12 +39,11 @@ export default class administradorController {
   };
 
   static createAdministrador = async (req, res) => {
-    const { nome_adm, email_adm, senha_adm, tel_adm } = req.body;
+    const { nome_adm, email_adm, tel_adm } = req.body;
     try {
       const novoAdministrador = await AdministradorService.createAdministrador({
         nome_adm,
         email_adm,
-        senha_adm,
         tel_adm,
       });
       return res.status(201).json(novoAdministrador);
@@ -56,14 +55,13 @@ export default class administradorController {
 
   static updateAdministrador = async (req, res) => {
     const { id } = req.params;
-    const { nome_adm, email_adm, senha_adm, tel_adm } = req.body;
+    const { nome_adm, email_adm, tel_adm } = req.body;
 
     try {
       const administradorAtualizado =
         await AdministradorService.updateAdministrador(id, {
           nome_adm,
           email_adm,
-          senha_adm,
           tel_adm,
         });
       return res.status(200).json(administradorAtualizado);

@@ -1,4 +1,5 @@
 import prisma from '../../src/database/prisma.js';
+import { CertificadoService } from './certificadoService.js';
 
 class FeedbackService {
   static async getAllFeedbacks() {
@@ -33,7 +34,7 @@ class FeedbackService {
         console.log("Participante encontrado:", participante);
 
         if (!participante) {
-          return { message: 'Email não está associado a nenhum participante.' };
+          return { message: 'Email não está associado a nenhum participante.', status: 400 };
         }
 
         const isInscritoNoEvento = participante.eventos.some(
@@ -43,7 +44,7 @@ class FeedbackService {
         console.log("ID do evento recebido:", feedbackData.id_evento);
         
         if (!isInscritoNoEvento) {
-          return { message: 'Participante não inscrito no evento.' };
+          return { message: 'Participante não inscrito no evento.', status: 400 };
         }
 
         feedbackData.id_participante = participante.id_participante;
@@ -59,7 +60,7 @@ class FeedbackService {
       });
 
       if (existingFeedback) {
-        return { message: 'Feedback já registrado para esse evento e participante.', feedback: existingFeedback };
+        return { message: 'Feedback já registrado para esse evento e participante.', feedback: existingFeedback, status: 400 };
       }
 
       const feedback = await prisma.feedback.create({
@@ -88,7 +89,15 @@ class FeedbackService {
         data: { classificacao_evento: novaMedia },
       });
 
-      return { feedback, updatedEvento };
+      const certificado = {
+        id_evento: feedbackData.id_evento,
+        id_participante: feedbackData.id_participante,
+        status_certificado: false,
+      }
+
+      await CertificadoService.createCertificado(certificado);
+
+      return { feedback, updatedEvento, status: 200 };
     } catch (error) {
       console.error('Erro ao criar feedback:', error);
       return { message: 'Erro ao criar feedback.', error: error.message };

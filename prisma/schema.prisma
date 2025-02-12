@@ -17,7 +17,6 @@ model Administrador {
   id_adm       Int          @id @default(autoincrement())
   nome_adm     String
   email_adm    String
-  senha_adm    String
   tel_adm      String
   eventos      Evento[]
   formularios  Formulario[]

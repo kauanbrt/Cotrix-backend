@@ -40,7 +40,6 @@ class AdministradorService {
         data: {
           nome_adm: administrador.nome_adm,
           email_adm: administrador.email_adm,
-          senha_adm: administrador.senha_adm,
           tel_adm: administrador.tel_adm,
         },
       });
@@ -58,7 +57,6 @@ class AdministradorService {
         data: {
           nome_adm: administrador.nome_adm,
           email_adm: administrador.email_adm,
-          senha_adm: administrador.senha_adm,
           tel_adm: administrador.tel_adm,
         },
       });

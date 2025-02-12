@@ -3,7 +3,6 @@ CREATE TABLE "Administrador" (
     "id_adm" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "nome_adm" TEXT NOT NULL,
     "email_adm" TEXT NOT NULL,
-    "senha_adm" TEXT NOT NULL,
     "tel_adm" TEXT NOT NULL
 );
 

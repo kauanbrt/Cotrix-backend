@@ -73,13 +73,6 @@ export default class ParticipanteService {
             };
         }
 
-        if (evento.participantes.length >= evento.qtd_participantes) {
-            return {
-                success: false,
-                message: 'Evento já atingiu o limite de participantes'
-            };
-        }
-
         let participante = await this.getParticipanteByEmail(participanteData.email_participante);
 
         if (!participante) {
