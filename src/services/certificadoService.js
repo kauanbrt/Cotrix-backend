@@ -33,6 +33,21 @@ class CertificadoService {
     }
   }
 
+  static async updateCertificadosByEvent(id_evento) {
+    try {
+      const certificadoAtualizado = await prisma.certificado.updateMany({
+        where: { id_evento: { equals: parseInt(id_evento) } },
+        data: {
+          status_certificado: true,
+        },
+      });
+      return certificadoAtualizado;
+    } catch (error) {
+      console.error("Erro ao atualizar certificado:", error);
+      throw new Error("Erro ao atualizar certificado.");
+    }
+  }
+
   static async exportarCertificadosXML(id_evento) {
     try {
       const certificados = await prisma.certificado.findMany({

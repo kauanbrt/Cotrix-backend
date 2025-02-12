@@ -54,6 +54,7 @@ router.post("/feedbacks", feedbackController.createFeedback);
 // Rotas para Certificado
 router.get("/certificados", certificadoController.getAllCertificados);
 router.post("/certificados", certificadoController.createCertificado);
+router.post("/certificados/updateValues", certificadoController.updateCertificadosByEvent);
 router.get("/exportar-certificados/:id_evento", certificadoController.exportarCertificadosXML);
 
 export default router;

@@ -26,6 +26,17 @@ export default class certificadoController {
     }
   };
 
+  static updateCertificadosByEvent = async (req, res) => {
+    const { id_evento } = req.body;
+    try {
+      const certificadosAtualizados = await CertificadoService.updateCertificadosByEvent(id_evento);
+      return res.status(201).json(certificadosAtualizados);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: error.message });
+    }
+  };
+
   static exportarCertificadosXML = async (req, res) => {
     try {
       const { id_evento } = req.params;

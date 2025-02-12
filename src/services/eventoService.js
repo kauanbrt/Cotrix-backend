@@ -6,7 +6,11 @@ class EventoService {
       const eventos = await prisma.evento.findMany({
         include: {
           administrador: true,
-          participantes: true,
+          _count: {
+            select: {
+              participantes: true,
+            }
+          },
           formularios: true,
           feedbacks: true,
           certificados: true,
