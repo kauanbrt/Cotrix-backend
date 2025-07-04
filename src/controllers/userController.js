@@ -1,10 +1,17 @@
-import userService from "../services/userService.js";
+import UserService from "../services/userService.js";
 
-export default class userController extends userService{
-
-    static getAllUserController = async (req, res) => {
-        const users = await userController.getAllUserService();
-        return res.status(200).json(users);
-    };
+class UserController {
+    static async getAllUserController(req, res) {
+        try {
+            const users = await UserService.getAllUsers(); 
+            return res.status(200).json(users); 
+        } catch (error) {
+            console.error("Erro no controlador ao obter usuários:", error);
+            return res.status(500).json({ message: "Erro ao obter usuários." }); 
+        }
+    }
 
 }
+
+export default UserController;
+
